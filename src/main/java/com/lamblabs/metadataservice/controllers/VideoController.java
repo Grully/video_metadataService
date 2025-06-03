@@ -1,0 +1,43 @@
+package com.lamblabs.metadataservice.controllers;
+
+import com.lamblabs.metadataservice.dtos.EditVideoDTO;
+import com.lamblabs.metadataservice.dtos.NewVideoDTO;
+import com.lamblabs.metadataservice.services.VideoCreationService;
+import com.lamblabs.metadataservice.services.VideoUpdateService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.UUID;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/video")
+public class VideoController {
+
+    private final VideoCreationService videoCreationService;
+    private final VideoUpdateService videoUpdateService;
+
+    @PostMapping
+    public ResponseEntity<Map<String, Long>> createVideo(
+            @RequestHeader("X-Request-ID") String requestId,
+            @Valid @RequestBody NewVideoDTO dto) {
+
+        Long videoId = videoCreationService.createVideo(dto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("id", videoId));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateVideo(
+            @RequestHeader("X-Request-ID") String requestId,
+            @PathVariable Long id,
+            @Valid @RequestBody EditVideoDTO dto) {
+
+        videoUpdateService.updateVideo(id, dto);
+        return ResponseEntity.ok().build();
+    }
+}
