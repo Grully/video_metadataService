@@ -13,20 +13,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class VideoCreationService {
-
     private final VideoRepository videoRepository;
 
     @Transactional
     public Long createVideo(NewVideoDTO dto) {
         VideoEntity video = new VideoEntity();
-        video.setUserId(dto.getUserID());
+        video.setUserId(dto.getUserId());
         video.setChannel(dto.getChannel());
         video.setPath(dto.getPath());
+        video.setFilename(dto.getFilename());
         video.setStatus(STATUS.PROCESSING);
         video.setDescription("");
         video.setTags(List.of());
 
-        VideoEntity savedVideo = videoRepository.save(video);
-        return savedVideo.getId();
+        return videoRepository.save(video).getId();
     }
 }
