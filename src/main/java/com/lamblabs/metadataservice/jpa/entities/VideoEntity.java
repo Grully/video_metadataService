@@ -21,7 +21,7 @@ public class VideoEntity {
         private Long id;
 
         @Column(name = "user_id")
-        private int userId;
+        private Integer userId;
 
         @Column(name = "channel")
         private CHANNEL channel;
@@ -38,4 +38,7 @@ public class VideoEntity {
 
         @Column(name = "path")
         private String path;
+
+        @Column(name = "filename")
+        private String filename;
 }

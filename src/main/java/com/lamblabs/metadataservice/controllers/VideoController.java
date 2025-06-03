@@ -17,7 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/video")
 public class VideoController {
-
     private final VideoCreationService videoCreationService;
     private final VideoUpdateService videoUpdateService;
 
@@ -25,7 +24,7 @@ public class VideoController {
     public ResponseEntity<Map<String, Long>> createVideo(
             @RequestHeader("X-Request-ID") String requestId,
             @Valid @RequestBody NewVideoDTO dto) {
-
+        // logging requestId TODO
         Long videoId = videoCreationService.createVideo(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("id", videoId));
@@ -36,7 +35,9 @@ public class VideoController {
             @RequestHeader("X-Request-ID") String requestId,
             @PathVariable Long id,
             @Valid @RequestBody EditVideoDTO dto) {
-
+        if (!id.equals(dto.getVideoId())) {
+            throw new IllegalArgumentException("Path ID and body video_id must match");
+        }
         videoUpdateService.updateVideo(id, dto);
         return ResponseEntity.ok().build();
     }
