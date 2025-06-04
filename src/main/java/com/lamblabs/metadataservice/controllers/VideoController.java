@@ -2,7 +2,9 @@ package com.lamblabs.metadataservice.controllers;
 
 import com.lamblabs.metadataservice.dtos.EditVideoDTO;
 import com.lamblabs.metadataservice.dtos.NewVideoDTO;
+import com.lamblabs.metadataservice.jpa.entities.VideoEntity;
 import com.lamblabs.metadataservice.services.VideoCreationService;
+import com.lamblabs.metadataservice.services.VideoQueryService;
 import com.lamblabs.metadataservice.services.VideoUpdateService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class VideoController {
     private final VideoCreationService videoCreationService;
     private final VideoUpdateService videoUpdateService;
+    private final VideoQueryService videoQueryService;
 
     @PostMapping
     public ResponseEntity<Map<String, Long>> createVideo(
@@ -40,5 +44,11 @@ public class VideoController {
         }
         videoUpdateService.updateVideo(id, dto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<VideoEntity>> getVideosByUserId(@PathVariable Integer userId) {
+        List<VideoEntity> videos = videoQueryService.getVideosByUserId(userId);
+        return ResponseEntity.ok(videos);
     }
 }
